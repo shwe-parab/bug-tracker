@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('jenkins native') {
+            steps {
+                echo 'testing method 1: jenkins native'
+            }
+        }
+    stage('Linux terminal'){
+        steps{
+            sh 'echo "testing method 2 : echo Linux terminal"'
+        }
+    }
+    }
+}
