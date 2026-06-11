@@ -2,15 +2,19 @@ pipeline {
     agent any
 
     stages {
-        stage('jenkins native') {
+        stage('unit test-backend') {
+        agent{
+           docker{
+           image 'snakee/golang-junit:1.21'
+           reuseNode true
+           }
+           }
             steps {
-                echo 'testing method 1: jenkins native'
+                dir('bugtracker-backend') {
+                    sh 'go test -v ./...'
+                }
             }
         }
-    stage('Linux terminal'){
-        steps{
-            sh 'echo "testing method 2 : echo Linux terminal"'
-        }
     }
-    }
+
 }
