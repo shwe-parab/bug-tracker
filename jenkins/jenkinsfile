@@ -6,6 +6,7 @@ pipeline {
         agent{
            docker{
            image 'snakee/golang-junit:1.21'
+            args '-e GOCACHE=/tmp/.cache'
            reuseNode true
            }
            }
