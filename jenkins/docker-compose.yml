@@ -14,7 +14,6 @@ services:
       jenkins:
         aliases:
           - docker
-    user: "0:0"
     command: --storage-driver overlay2
 
   my-jenkins:
