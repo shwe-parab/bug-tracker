@@ -2,13 +2,13 @@ pipeline {
     agent any
     stages {
         stage('unit test-frontend') {
-        agent{
-           docker{
-           image 'node:20-alpine'
-            args '-e GOCACHE=/tmp/.cache'
-           reuseNode true
-           }
-           }
+            agent{
+                 docker{
+                      image 'node:20-alpine'
+                      args '-e GOCACHE=/tmp/.cache'
+                       reuseNode true
+                }
+            }
             steps {
                 dir('bugtracker-frontend') {
                     sh '''
@@ -24,4 +24,5 @@ pipeline {
             }
         }
 
+    }
 }
