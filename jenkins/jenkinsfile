@@ -13,8 +13,6 @@ pipeline {
             }
             steps {
                 dir('bugtracker-frontend') {
-                    // This will now successfully delete the locked files
-                    sh 'rm -rf node_modules package-lock.json'
                     sh '''
                     npm ci
                     npm test
