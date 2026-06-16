@@ -10,6 +10,8 @@ pipeline {
             }
             steps {
                 dir('bugtracker-frontend') {
+                    // Fix: Clean up the broken root-owned files before installing dependencies
+                    sh 'rm -rf node_modules package-lock.json'
                     sh '''
                     npm ci
                     npm test
@@ -26,7 +28,8 @@ pipeline {
                     }
                     steps {
                         dir('bugtracker-backend') {
-                            sh 'go test ./... -v'
+                            // Fix: Direct Go to a safe, wide-open write area for its cache
+                            sh 'export GOCACHE=/tmp/.cache && go test -v ./...'
                         }
                     }
 
