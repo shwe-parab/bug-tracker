@@ -5,7 +5,9 @@ pipeline {
             agent{
                  docker{
                       image 'node:20-alpine'
-                       reuseNode true
+                      reuseNode true
+                        // This flag forces the container to run as root, granting Go access to create its cache
+                      args '-u root'
                 }
             }
             steps {
