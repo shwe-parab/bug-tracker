@@ -6,9 +6,6 @@ pipeline {
                  docker{
                       image 'node:20-alpine'
                       reuseNode true
-                      // Add this line to temporarily run as root and clear the lock
-                      args '-u root'
-
                 }
             }
             steps {
@@ -30,7 +27,11 @@ pipeline {
                     steps {
                         dir('bugtracker-backend') {
                             // Fix: Direct Go to a safe, wide-open write area for its cache
-                            sh 'export GOCACHE=/tmp/.cache && go test -v ./...'
+                            sh '''
+                            export GOCACHE=/tmp/.cache
+                            export GOMODCACHE=/tmp/.modcache
+                            go test -v ./...
+                            '''
                         }
                     }
 
