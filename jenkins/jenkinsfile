@@ -6,6 +6,8 @@ pipeline {
                  docker{
                       image 'node:20-alpine'
                       reuseNode true
+                      // Keep this here for just one more run to ensure permissions stay clean
+                      args '-u root'
                 }
             }
             steps {
