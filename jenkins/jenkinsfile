@@ -22,8 +22,6 @@ pipeline {
                          docker{
                               image 'snakee/golang-junit:1.21'
                                reuseNode true
-                               // This flag forces the container to run as root, granting Go access to create its cache
-                               args '-u root'
                         }
                     }
                     steps {
