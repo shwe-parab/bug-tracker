@@ -6,11 +6,14 @@ pipeline {
                  docker{
                       image 'node:20-alpine'
                       reuseNode true
+                      // Add this line to temporarily run as root and clear the lock
+                      args '-u root'
+
                 }
             }
             steps {
                 dir('bugtracker-frontend') {
-                    // Fix: Clean up the broken root-owned files before installing dependencies
+                    // This will now successfully delete the locked files
                     sh 'rm -rf node_modules package-lock.json'
                     sh '''
                     npm ci
