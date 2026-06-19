@@ -1,72 +1,82 @@
 pipeline {
     agent any
     stages {
-        stage('unit test-frontend') {
-            agent{
-                 docker{
-                      image 'node:20-alpine'
-                      reuseNode true
-                      // Keep this here for just one more run to ensure permissions stay clean
-                      args '-u root'
-                }
-            }
-            steps {
-                dir('bugtracker-frontend') {
-                    sh '''
-                    npm ci
-                    npm test
-                    mkdir reports
-                    mv coverage reports/
-                    '''
-                }
-            }
-            post{
-                always{
-                   junit 'bugtracker-frontend/test-results.xml'
-                   publishHTML target:[
-                              reportDir: 'bugtracker-frontend/reports/coverage',
-                              reportFiles: 'index.html',
-                              reportName: 'Frontend Coverage Report'
-                              ]
-                }
-            }
-        }
-        stage('unit test-backend') {
+        stage('Execute unit test'){
+           parallel {
+                stage('unit test-frontend') {
                     agent{
                          docker{
-                              image 'snakee/golang-junit:1.21'
-                               reuseNode true
+                              image 'node:20-alpine'
+                              reuseNode true
+                              // Keep this here for just one more run to ensure permissions stay clean
+                              args '-u root'
                         }
                     }
                     steps {
-                        dir('bugtracker-backend') {
-                            // Fix: Direct Go to a safe, wide-open write area for its cache
+                        dir('bugtracker-frontend') {
                             sh '''
-                                export GOCACHE=/tmp/.cache
-                                export GOMODCACHE=/tmp/.modcache
-                                go test -v ./... 2>&1 | go-junit-report > test-results.xml
-
-                               #generate tets coverage report
-                               go test -coverprofile coverage.out -covermode atomic ./...
-                               go tool cover -html=coverage.out -o coverage.html
-
-                               mkdir -p reports
-                               mv coverage.html reports
-
+                            npm ci
+                            npm test
+                            mkdir reports
+                            mv coverage reports/
                             '''
                         }
                     }
                     post{
                         always{
-                            junit 'bugtracker-backend/test-results.xml'
-                            publishHTML target: [
-                                reportDir: 'bugtracker-backend/reports',
-                                reportFiles: 'coverage.html',
-                                reportName: 'Bankend Coverage Report'
-                            ]
+                           junit 'bugtracker-frontend/test-results.xml'
+                           publishHTML target:[
+                                      reportDir: 'bugtracker-frontend/reports/coverage',
+                                      reportFiles: 'index.html',
+                                      reportName: 'Frontend Coverage Report'
+                                      ]
                         }
                     }
+                }
+                stage('unit test-backend') {
+                            agent{
+                                 docker{
+                                      image 'snakee/golang-junit:1.21'
+                                       reuseNode true
+                                }
+                            }
+                            steps {
+                                dir('bugtracker-backend') {
+                                    // Fix: Direct Go to a safe, wide-open write area for its cache
+                                    sh '''
+                                        export GOCACHE=/tmp/.cache
+                                        export GOMODCACHE=/tmp/.modcache
+                                        go test -v ./... 2>&1 | go-junit-report > test-results.xml
 
+                                       #generate tets coverage report
+                                       go test -coverprofile coverage.out -covermode atomic ./...
+                                       go tool cover -html=coverage.out -o coverage.html
+
+                                       mkdir -p reports
+                                       mv coverage.html reports
+
+                                    '''
+                                }
+                            }
+                            post{
+                                always{
+                                    junit 'bugtracker-backend/test-results.xml'
+                                    publishHTML target: [
+                                        reportDir: 'bugtracker-backend/reports',
+                                        reportFiles: 'coverage.html',
+                                        reportName: 'Bankend Coverage Report'
+                                    ]
+                                }
+                            }
+
+
+                }
+           }
+        }
+        post{
+             always{
+                cleanWs()
+             }
         }
     }
 }
