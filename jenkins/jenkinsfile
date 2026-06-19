@@ -17,7 +17,7 @@ pipeline {
                             sh '''
                             npm ci
                             npm test
-                            mkdir reports
+                            mkdir -p reports
                             mv coverage reports/
                             '''
                         }
