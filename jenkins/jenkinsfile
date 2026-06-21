@@ -99,10 +99,21 @@ pipeline {
                         dir('tests-api'){
                           sh '''
                           curl -v http://localhost:8080/api/health
-                          npx wait-on http://localhost:8080/api/health --timeout 30000
+                          #below line is commented out because of some wait issue
+                          # npx wait-on http://localhost:8080/api/health --timeout 30000
                           npm ci
                           npx playwright test
                           '''
+                        }
+                    }
+                    post{
+                        always{
+                            junit 'tests-api/test-results/results.xml'
+                            publishHTML target:[
+                                      reportDir: 'tests-api/playwright-report',
+                                      reportFiles: 'index.html',
+                                      reportName: 'Playwright API Test Report'
+                                      ]
                         }
                     }
          }
