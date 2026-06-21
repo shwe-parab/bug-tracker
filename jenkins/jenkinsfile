@@ -84,8 +84,6 @@ pipeline {
             }
             steps{
               sh 'docker compose up --build -d'
-              sh 'docker ps'
-              sh 'docker logs bug-tracker-backend-1'
             }
         }
 
@@ -102,7 +100,6 @@ pipeline {
                           sh '''
                           curl -v http://localhost:8080/api/health
                           npm ci
-                          npx wait-on http://localhost:8080/api/health --timeout 30000
                           npx playwright test
                           '''
                         }
