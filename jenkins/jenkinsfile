@@ -96,7 +96,7 @@ pipeline {
                        }
                     }
                     steps{
-                        dir('/tests-api'){
+                        dir('tests-api'){
                           sh '''
                           npx wait port http://localhost:8080/api/health -t 30000
                           npm ci
@@ -104,7 +104,7 @@ pipeline {
                           '''
                         }
                     }
-                }
+         }
     }
     post{
        always{
