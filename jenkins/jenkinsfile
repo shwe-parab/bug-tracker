@@ -99,6 +99,7 @@ pipeline {
                         dir('tests-api'){
                           sh '''
                           curl -v http://localhost:8080/api/health
+                          npx wait-on http://localhost:8080/api/health --timeout 30000
                           npm ci
                           npx playwright test
                           '''
