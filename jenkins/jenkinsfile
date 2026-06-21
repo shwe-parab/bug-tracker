@@ -98,8 +98,8 @@ pipeline {
                     steps{
                         dir('tests-api'){
                           sh '''
-                          npx wait port http://localhost:8080/api/health -t 30000
                           npm ci
+                          npx wait-on http://localhost:8080/api/health --timeout 30000
                           npx playwright test
                           '''
                         }
