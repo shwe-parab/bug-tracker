@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  unit test backend:
+  unit-test-backend:
      runs-on: ubuntu-latest
      steps:
      - uses: -actions/checkout@v4
@@ -19,6 +19,6 @@ jobs:
          cache-dependencies-path: bugtracker-backend/go.sum
 
      - name: Execute backend unit tests
-       working -directory: ./bugtracker-backend
+       working-directory: ./bugtracker-backend
        run: |
              go test -v ./... 
