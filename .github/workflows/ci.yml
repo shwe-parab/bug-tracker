@@ -41,3 +41,12 @@ jobs:
       run: |
            npm ci
            npm test
+
+    - name: upload frontend unit test results
+      uses: actions/dorny/test-reporter@v1
+      if: always()
+      with:
+        name: frontend-unit-report
+        path: bugtracker-frontend/test-results.xml
+        reporter: jest-junit
+
