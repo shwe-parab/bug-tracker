@@ -86,7 +86,6 @@ jobs:
            cat full_output.txt >> $GITHUB_OUTPUT
            echo "EOF" >> $GITHUB_OUTPUT
         
-        
 
     - name: upload frontend unit test results
       uses: dorny/test-reporter@v1
@@ -119,5 +118,5 @@ jobs:
         body: |
           ### Frontend Coverage Report
           ```
-          ${{ steps.test-frontend.outputs.report }}              
+          ${{ needs.unit-test-frontend.outputs.coverage }}              
           ```
