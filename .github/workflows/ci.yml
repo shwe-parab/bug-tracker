@@ -54,6 +54,8 @@ jobs:
          reporter: jest-junit
 
   unit-test-frontend:
+    outputs:
+      coverage: ${{ steps.test-frontend.outputs.report }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -66,6 +68,7 @@ jobs:
         cache-dependency-path: bugtracker-frontend/package-lock.json
 
     - name: install node dependencies and execute frontend unit tests
+      id: test-frontend
       working-directory: ./bugtracker-frontend
       run: |
            npm ci
@@ -73,9 +76,15 @@ jobs:
         
            echo "## frontend test coverage report" >>$GITHUB_STEP_SUMMARY 
         
+           #to publish the test coverage in the summary of the workflow
            echo '```' >>$GITHUB_STEP_SUMMARY 
            cat full_output.txt >>$GITHUB_STEP_SUMMARY
            echo '```' >>$GITHUB_STEP_SUMMARY 
+        
+           #to add frontend coverage in the comment of PR
+           echo "report<<EOF" >> $GITHUB_OUTPUT
+           cat full_output.txt >> $GITHUB_OUTPUT
+           echo "EOF" >> $GITHUB_OUTPUT
         
 
     - name: upload frontend unit test results
@@ -88,17 +97,26 @@ jobs:
 
   create-coverage-comment:
     if: github.event_name == 'pull_request'
-    needs: [unit-test-backend]
+    needs: [unit-test-backend,unit-test-frontend]
     runs-on: ubuntu-latest
     permissions:
         pull-requests: write
     steps:
-    - name: Create backend coverage comment
+    - name: Create backend coverage in PR comment
       uses: peter-evans/create-or-update-comment@v2
       with:
         issue-number: ${{ github.event.pull_request.number }}
         body: |
           ### Backend Coverage Report
           ```
-          ${{ needs.unit-test-backend.outputs.coverage }}
+          ${{ needs.unit-test-backend.outputs.coverage }}              
+          ```
+    - name: create frontend coverage in PR comment
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        body: |
+          ### Frontend Coverage Report
+          ```
+          ${{ needs.unit-test-frontend.outputs.coverage }}              
           ```
