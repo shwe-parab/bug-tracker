@@ -48,7 +48,7 @@ pipeline {
                                         export GOMODCACHE=/tmp/.modcache
                                         go test -v ./... 2>&1 | go-junit-report > test-results.xml
 
-                                       #generate tets coverage report
+                                       #generate tests coverage report
                                        go test -coverprofile coverage.out -covermode atomic ./...
                                        go tool cover -html=coverage.out -o coverage.html
 
