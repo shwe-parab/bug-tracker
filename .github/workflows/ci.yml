@@ -76,12 +76,12 @@ jobs:
         
            echo "## frontend test coverage report" >>$GITHUB_STEP_SUMMARY 
         
-        #to publish the test coverage in the summary of the workflow
+           #to publish the test coverage in the summary of the workflow
            echo '```' >>$GITHUB_STEP_SUMMARY 
            cat full_output.txt >>$GITHUB_STEP_SUMMARY
            echo '```' >>$GITHUB_STEP_SUMMARY 
         
-        #to add frontend coverage in the comment of PR
+           #to add frontend coverage in the comment of PR
            echo "report<<EOF" >> $GITHUB_OUTPUT
            cat full_output.txt >> $GITHUB_OUTPUT
            echo "EOF" >> $GITHUB_OUTPUT
