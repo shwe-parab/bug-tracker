@@ -96,7 +96,7 @@ jobs:
         reporter: jest-junit
 
   create-coverage-comment:
-    if: github.event_name == 'pull_request'
+    #if: github.event_name == 'pull_request'
     needs: [unit-test-backend,unit-test-frontend]
     runs-on: ubuntu-latest
     permissions:
