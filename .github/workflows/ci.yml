@@ -195,10 +195,10 @@ jobs:
          path: summary.json  #path is not mentioned as /.tests-perf/summary.json because ci is adding the file in the root folder itself which is ./test-perf for this job
          retention-days: 30
 
-     -name:upload performance html report
-      if: always()
-      uses" action/upload-artifact@v4
-      with:
-        name: performance-html-report
-        path: perf-results.html
-        retention-days: 30
+     - name: upload performance html report
+       if: always()
+       uses: action/upload-artifact@v4
+       with:
+         name: performance-html-report
+         path: perf-results.html
+         retention-days: 30
