@@ -173,7 +173,7 @@ jobs:
 
      - name: upload playwright test results
        if: always()
-       uses: actions/upload-artifact@v4 #this actions just takes teh file and uploaded it on GH which can be downloaded
+       uses: actions/upload-artifact@v4 #this actions just takes the file and uploaded it on GH which can be downloaded
        with:
          name: playwright-e2e-report
          path: ./tests-e2e/playwright-report/index.html
@@ -197,7 +197,7 @@ jobs:
 
      - name: upload performance html report
        if: always()
-       uses: action/upload-artifact@v4
+       uses: actions/upload-artifact@v4
        with:
          name: performance-html-report
          path: perf-results.html
