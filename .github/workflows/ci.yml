@@ -175,6 +175,6 @@ jobs:
        uses: dorny/test-reporter@v1  #this actions reads the report and displays it nicely on the GH UI
        with:
          name: api-test-report
-         path: ./tests-api/playwright-report/index.html
+         path: ./tests-api/test-results/results.xml
          reporter: jest-junit
 
