@@ -146,21 +146,12 @@ jobs:
           CI: "1" #ci is a env variable used to run tests in headless mode which is in playwright.config.ts file
        run: |
            npm ci
-           npm install playwright
            npx playwright test 
 
      - name: stop application
        if: always()
        run: |
          docker compose down
-
-     - name: upload e2e test results
-       if: always()
-       uses: actions/upload-artifact@v4
-       with:
-            name: e2e-test-report
-            path: ./tests-api/test-results/
-            retention-days: 30
 
      - name: upload API  test results
        if: always()
@@ -177,3 +168,12 @@ jobs:
          name: playwright-e2e-report
          path: ./tests-api/playwright-report/
          retention-days: 30
+
+     - name: publish api test results
+       if: always()
+       uses: dorny/test-reporter@v1
+       with:
+          name: api-test-report
+          path: ./tests-api/test-results/results.xml
+          reporter: jest-junit
+
