@@ -140,10 +140,10 @@ jobs:
            npm ci
            npx playwright test
 
-     - name: run  playwright test
+     - name: run E2E test
+       working-directory: ./tests-e2e
        env:
           CI: "1" #ci is a env variable used to run tests in headless mode which is in playwright.config.ts file
-       working-directory: ./tests-e2e
        run: |
            npm ci
            npm install playwright
