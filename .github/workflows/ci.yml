@@ -121,10 +121,10 @@ jobs:
           ${{ needs.unit-test-frontend.outputs.coverage }}              
           ```
 
-  API-test:
+   #we are running api and e2e in one job as docker takes time to spin up containers so it saves time
+  API-N-e2e_test:
    needs: [unit-test-backend,unit-test-frontend]
    runs-on: ubuntu-latest
-
    steps:
      - name: Checkout code
        uses: actions/checkout@v4
@@ -140,10 +140,27 @@ jobs:
            npm ci
            npx playwright test
 
+     - name: run  playwright test
+       env:
+          CI: "1" #ci is a env variable used to run tests in headless mode which is in playwright.config.ts file
+       working-directory: ./tests-api
+       run: |
+           npm ci
+           npm install playwright
+           npx playwright test 
+
      - name: stop application
        if: always()
        run: |
          docker compose down
+
+     - name: upload e2e test results
+       if: always()
+       uses: actions/upload-artifact@v4
+       with:
+            name: e2e-test-report
+            path: ./tests-api/test-results/
+            retention-days: 30
 
      - name: upload API  test results
        if: always()
@@ -157,7 +174,6 @@ jobs:
        if: always()
        uses: actions/upload-artifact@v4
        with:
-         name: playwright-report
+         name: playwright-e2e-report
          path: ./tests-api/playwright-report/
          retention-days: 30
-
