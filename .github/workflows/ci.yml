@@ -145,8 +145,10 @@ jobs:
        env:
           CI: "1" #ci is a env variable used to run tests in headless mode which is in playwright.config.ts file
        run: |
-           npm ci
-           npx playwright test 
+           pwd
+           ls -la
+           find .. -name "playwright.config.*"
+           npx playwright test --list 
 
      - name: stop application
        if: always()
