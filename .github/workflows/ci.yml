@@ -164,9 +164,17 @@ jobs:
 
      - name: upload playwright test results
        if: always()
-       uses: actions/upload-artifact@v4
+       uses: actions/upload-artifact@v4 #this actions just takes teh file and uploaded it on GH which can be downloaded
        with:
          name: playwright-e2e-report
-         path: ./tests-e2e/test-results/
+         path: ./tests-e2e/playwright-report/index.html
          retention-days: 30
+
+     - name: publish API  test results
+       if: always()
+       uses: dorny/test-reporter@v1  #this actions reads the report and displays it nicely on the GH UI
+       with:
+         name: api-test-report
+         path: ./tests-api/playwright-report/index.html
+         reporter: jest-junit
 
