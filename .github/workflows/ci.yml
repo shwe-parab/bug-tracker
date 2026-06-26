@@ -122,7 +122,7 @@ jobs:
           ```
 
    #we are running api and e2e in one job as docker takes time to spin up containers so it saves time
-  API-N-e2e_test:
+  API-N-e2eN-Perf-test:
    needs: [unit-test-backend,unit-test-frontend]
    runs-on: ubuntu-latest
    steps:
@@ -148,6 +148,15 @@ jobs:
            npm ci
            npx playwright install --with-deps
            npx playwright test
+
+     - name: set up k6 for performance  test
+       uses: grafana/setup-k6-action@v1
+
+     - name: run performance test
+       uses: grafana/run-k6-action@v1
+       with:
+         path: ./tests-perf/script.js
+         flags: --out json=summary.json
 
      - name: stop application
        if: always()
@@ -178,3 +187,18 @@ jobs:
          path: ./tests-api/test-results/results.xml
          reporter: jest-junit
 
+     - name:upload performance test results:
+       if: always()
+       uses: actions/upload-artifact@v4
+       with:
+         name: performance-test-report
+         path: summary.json  #path is not mentioned as /.tests-perf/summary.json because ci is adding the file in the root folder itself which is ./test-perf for this job
+         retention-days: 30
+
+     -name:upload performance html report
+      if: always()
+      uses" action/upload-artifact@v4
+      with:
+        name: performance-html-report
+        path: perf-results.html
+        retention-days: 30
